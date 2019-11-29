@@ -34,6 +34,19 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
     formatMessage,
     ...props,
   });
+  const defaultFooterDom = (
+    <DefaultFooter
+      copyright="2019 冀ICP备19034687号"
+      links={[
+        {
+          key: 'Ant Design Pro',
+          title: '个人学习',
+          href: 'http://lightclound.top',
+          blankTarget: true,
+        }
+      ]}
+    />
+  )
   return (
     <>
       <Helmet>
@@ -50,14 +63,14 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
             <div className={styles.header}>
               <Link to="/">
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ant Design</span>
+                <span className={styles.title}>轻云</span>
               </Link>
             </div>
-            <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+            <div className={styles.desc}>个人学习博客</div>
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        {defaultFooterDom}
       </div>
     </>
   );

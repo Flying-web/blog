@@ -46,12 +46,19 @@ const plugins: IPlugin[] = [
       //   include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
       //   exclude: ['@babel/runtime', 'netlify-lambda'],
       // },
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000/',
+          changeOrigin: true,
+          pathRewrite: { '^/api': '' },
+        },
+      }
     },
   ],
   [
     'umi-plugin-pro-block',
     {
-      moveMock: false,
+      moveMock: true,
       moveService: false,
       modifyRequest: true,
       autoAddMenu: true,
@@ -184,11 +191,11 @@ export default {
     basePath: '/',
   },
   // chainWebpack: webpackPlugin,
-  // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
-  //   },
-  // },
+  proxy: {
+    '/api/': {
+      target: 'http://localhost:3000/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
 } as IConfig;

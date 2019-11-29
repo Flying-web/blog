@@ -57,6 +57,7 @@ const Model: LoginModelType = {
             return;
           }
         }
+        console.log(redirect)
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
