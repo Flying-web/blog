@@ -7,7 +7,7 @@ import { formatMessage } from 'umi-plugin-react/locale';
 
 import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import styles from './UserLayout.less';
 
 export interface UserLayoutProps extends ConnectProps {
@@ -36,10 +36,11 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
   });
   const defaultFooterDom = (
     <DefaultFooter
+      style={{background:'transparent'}}
       copyright="2019 冀ICP备19034687号"
       links={[
         {
-          key: 'Ant Design Pro',
+          key: '个人学习',
           title: '个人学习',
           href: 'http://lightclound.top',
           blankTarget: true,
@@ -66,7 +67,6 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
                 <span className={styles.title}>轻云</span>
               </Link>
             </div>
-            <div className={styles.desc}>个人学习博客</div>
           </div>
           {children}
         </div>

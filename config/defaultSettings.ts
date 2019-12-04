@@ -43,7 +43,7 @@ export interface DefaultSettings {
 }
 
 export default {
-  navTheme: 'dark',
+  navTheme: 'light',
   // 拂晓蓝
   primaryColor: 'daybreak',
   layout: 'sidemenu',
@@ -55,7 +55,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: '轻云',
   pwa: false,
   iconfontUrl: '',
 } as DefaultSettings;

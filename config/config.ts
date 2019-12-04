@@ -1,17 +1,14 @@
 import { IConfig, IPlugin } from 'umi-types';
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
+
 import slash from 'slash2';
-import themePluginConfig from './themePluginConfig';
+import themePluginConfig from './themePluginConfig'; // import darkTheme from '@ant-design/dark-theme';
 
-// import darkTheme from '@ant-design/dark-theme';
-
-const { pwa, primaryColor } = defaultSettings;
-
-// preview.pro.ant.design only do not use in your production ;
+const { pwa, primaryColor } = defaultSettings; // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
+
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION, TEST } = process.env;
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
-
 const plugins: IPlugin[] = [
   [
     'umi-plugin-react',
@@ -40,7 +37,8 @@ const plugins: IPlugin[] = [
               importWorkboxFrom: 'local',
             },
           }
-        : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
+        : false,
+      // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
       //   include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
@@ -50,9 +48,11 @@ const plugins: IPlugin[] = [
         '/api': {
           target: 'http://localhost:3000/',
           changeOrigin: true,
-          pathRewrite: { '^/api': '' },
+          pathRewrite: {
+            '^/api': '',
+          },
         },
-      }
+      },
     },
   ],
   [
@@ -100,6 +100,12 @@ export default {
           path: '/user/login',
           component: './user/login',
         },
+        {
+          name: 'register',
+          icon: 'smile',
+          path: '/user/register',
+          component: './user/register',
+        },
       ],
     },
     {
@@ -129,6 +135,19 @@ export default {
               authority: ['admin'],
             },
             {
+              name: 'account',
+              icon: 'user',
+              path: '/account',
+              routes: [
+                {
+                  name: 'center',
+                  icon: 'smile',
+                  path: '/account/center',
+                  component: './account/Center',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],
@@ -138,7 +157,6 @@ export default {
         },
       ],
     },
-
     {
       component: './404',
     },
@@ -163,7 +181,7 @@ export default {
         resourcePath: string;
       },
       _: string,
-      localName: string,
+      localName: string
     ) => {
       if (
         context.resourcePath.includes('node_modules') ||
@@ -195,7 +213,9 @@ export default {
     '/api/': {
       target: 'http://localhost:3000/',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: {
+        '^/api': '',
+      },
     },
   },
 } as IConfig;

@@ -21,7 +21,7 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 
 const noMatch = (
   <Result
@@ -69,7 +69,7 @@ const defaultFooterDom = (
     copyright="2019 冀ICP备19034687号"
     links={[
       {
-        key: 'Ant Design Pro',
+        key: '个人学习',
         title: '个人学习',
         href: 'http://lightclound.top',
         blankTarget: true,

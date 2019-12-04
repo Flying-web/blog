@@ -107,7 +107,7 @@ class Login extends Component<LoginProps, LoginState> {
             this.loginForm = form;
           }}
         >
-          <Tab key="account" tab={formatMessage({ id: 'user-login.login.tab-login-credentials' })}>
+          <div className={styles.loginForm}>
             {status === 'error' &&
               loginType === 'account' &&
               !submitting &&
@@ -116,7 +116,7 @@ class Login extends Component<LoginProps, LoginState> {
               )}
             <UserName
               name="userName"
-              placeholder={`${formatMessage({ id: 'user-login.login.userName' })}: admin or user`}
+              placeholder={`${formatMessage({ id: 'user-login.login.userName' })}: `}
               rules={[
                 {
                   required: true,
@@ -126,7 +126,7 @@ class Login extends Component<LoginProps, LoginState> {
             />
             <Password
               name="password"
-              placeholder={`${formatMessage({ id: 'user-login.login.password' })}: 123456`}
+              placeholder={`${formatMessage({ id: 'user-login.login.password' })}: `}
               rules={[
                 {
                   required: true,
@@ -140,11 +140,14 @@ class Login extends Component<LoginProps, LoginState> {
                 }
               }}
             />
-          </Tab>
+          </div>
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="user-login.login.remember-me" />
             </Checkbox>
+            <Link className={styles.register} to="/user/register">
+              <FormattedMessage id="register.register.register" />
+            </Link>
             <a style={{ float: 'right' }} href="">
               <FormattedMessage id="user-login.login.forgot-password" />
             </a>
@@ -152,6 +155,11 @@ class Login extends Component<LoginProps, LoginState> {
           <Submit loading={submitting}>
             <FormattedMessage id="user-login.login.login" />
           </Submit>
+          {/* <div className={styles.other}>
+            <Link className={styles.register} to="/user/register">
+              <FormattedMessage id="register.register.register" />
+            </Link>
+          </div> */}
         </LoginComponents>
       </div>
     );

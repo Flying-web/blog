@@ -30,6 +30,7 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
         type: 'user/fetchCurrent',
       });
     }
+    
   }
 
   render() {

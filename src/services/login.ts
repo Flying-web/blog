@@ -7,6 +7,12 @@ export interface LoginParamsType {
   captcha: string;
 }
 
+export interface UserRegisterParams {
+  userName: string;
+  password: string;
+  confirm: string;
+}
+
 export async function fakeAccountLogin(params: LoginParamsType) {
   return request('/api/login/account', {
     method: 'POST',
@@ -16,4 +22,11 @@ export async function fakeAccountLogin(params: LoginParamsType) {
 
 export async function getFakeCaptcha(mobile: string) {
   return request(`/api/login/captcha?mobile=${mobile}`);
+}
+
+export async function fakeRegister(params: UserRegisterParams) {
+  return request('/api/login/signup', {
+    method: 'POST',
+    data: params,
+  });
 }
