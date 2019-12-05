@@ -1,31 +1,68 @@
-import React from 'react';
-import { Card, Typography, Alert, Icon } from 'antd';
+import React, { Component } from 'react';
+import { Card, Table, Divider, Tag } from 'antd';
+import { Dispatch } from 'redux';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { connect } from 'dva';
+import { ConnectState } from '@/models/connect';
+interface AdminProps {
+  dispatch?: Dispatch<any>;
+  listloading?: boolean;
+  usersList: any
+}
 
-export default (): React.ReactNode => (
-  <PageHeaderWrapper content=" 这个页面只有 admin 权限才能查看">
-    <Card>
-      <Alert
-        message="umi ui 现已发布，欢迎使用 npm run ui 启动体验。"
-        type="success"
-        showIcon
-        banner
-        style={{
-          margin: -12,
-          marginBottom: 48,
-        }}
-      />
-      <Typography.Title level={2} style={{ textAlign: 'center' }}>
-        <Icon type="smile" theme="twoTone" /> Ant Design Pro{' '}
-        <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" /> You
-      </Typography.Title>
-    </Card>
-    <p style={{ textAlign: 'center', marginTop: 24 }}>
-      Want to add more pages? Please refer to{' '}
-      <a href="https://pro.ant.design/docs/block-cn" target="_blank" rel="noopener noreferrer">
-        use block
-      </a>
-      。
-    </p>
-  </PageHeaderWrapper>
-);
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    render: (text: any) => <a>{text}</a>,
+  },
+  {
+    title: '角色',
+    dataIndex: 'authority',
+    key: 'authority',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'creatTime',
+    key: 'creatTime',
+  },
+  {
+    title: 'Tags',
+    key: 'tags',
+    dataIndex: 'tags',
+  },
+  {
+    title: '国家',
+    key: 'country',
+    dataIndex: 'country',
+  },
+];
+@connect(({user, loading}: ConnectState) => ({
+  usersList: user.allUsers,
+  listloading: loading.models.user
+}))
+class Admin extends Component<AdminProps> {
+  componentDidMount() {
+    const { dispatch } = this.props
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchgetAllUsers'
+      })
+    }
+  }
+
+  render() {
+    const { usersList, listloading } = this.props
+    return (
+      <PageHeaderWrapper>
+        <Card>
+          <Table loading={listloading} columns={columns} dataSource={usersList} />
+        </Card>
+      </PageHeaderWrapper>
+    )
+  }
+
+}
+
+export default Admin

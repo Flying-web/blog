@@ -145,7 +145,19 @@ export default {
                   path: '/account/center',
                   component: './account/Center',
                 },
+                {
+                  name: 'settings',
+                  icon: 'smile',
+                  path: '/account/settings',
+                  component: './account/Settings',
+                },
               ],
+            },
+            {
+              name: '搜索列表（项目）',
+              icon: 'smile',
+              path: '/listsearchprojects',
+              component: './ListSearchProjects',
             },
             {
               component: './404',

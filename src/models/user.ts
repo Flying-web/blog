@@ -1,7 +1,8 @@
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
-
-import { queryCurrent, query as queryUsers } from '@/services/user';
+import { message } from 'antd';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { queryCurrent, query as queryUsers, changeUserInfo, getAllUsers } from '@/services/user';
 
 export interface CurrentUser {
   avatar?: string;
@@ -19,6 +20,7 @@ export interface CurrentUser {
 
 export interface UserModelState {
   currentUser?: CurrentUser;
+  allUsers?: any[];
 }
 
 export interface UserModelType {
@@ -27,9 +29,13 @@ export interface UserModelType {
   effects: {
     fetch: Effect;
     fetchCurrent: Effect;
+    fetchChangeCurrent: Effect;
+    fetchgetAllUsers: Effect;
   };
   reducers: {
     saveCurrentUser: Reducer<UserModelState>;
+    getAllUsers: Reducer<UserModelState>;
+    changeCurrentUser: Reducer<UserModelState>;
     changeNotifyCount: Reducer<UserModelState>;
   };
 }
@@ -39,6 +45,7 @@ const UserModel: UserModelType = {
 
   state: {
     currentUser: {},
+    allUsers:[]
   },
 
   effects: {
@@ -56,6 +63,21 @@ const UserModel: UserModelType = {
         payload: data,
       });
     },
+    *fetchChangeCurrent({ payload }, { call, put }) {
+      const response = yield call(changeUserInfo, payload);
+      yield put({
+        type: 'changeCurrentUser',
+        payload: response.data,
+      });
+      message.success(formatMessage({ id: 'userandsettings.basic.update.success' }))
+    },
+    *fetchgetAllUsers({ payload }, { call, put }) {
+      const response = yield call(getAllUsers, payload);
+      yield put({
+        type: 'getAllUsers',
+        payload: response.data,
+      });
+    },
   },
 
   reducers: {
@@ -63,6 +85,27 @@ const UserModel: UserModelType = {
       return {
         ...state,
         currentUser: action.payload || {},
+      };
+    },
+    getAllUsers(state, action) {
+      return {
+        ...state,
+        allUsers: action.payload || [],
+      };
+    },
+    changeCurrentUser(state = {
+      currentUser: {},
+    }, action) {
+      console.log({
+        ...state.currentUser,
+        ...action.payload
+      })
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          ...action.payload
+        },
       };
     },
     changeNotifyCount(
