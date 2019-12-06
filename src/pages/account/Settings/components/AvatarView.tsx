@@ -27,6 +27,7 @@ function beforeUpload(file: File) {
 interface avatarViewProps extends ConnectProps {
     avatar: string;
     onChange: any;
+    loading: Boolean;
 }
 interface avatarViewStates {
     imageUrl: string;
@@ -57,7 +58,7 @@ class AvatarView extends Component<avatarViewProps, avatarViewStates> {
             //     const avatar = info.file.response.data.avatar.path
             //    }
             // );
-            const imageUrl = `info.file.response.data.avatar.path`
+            const imageUrl = info.file.response.data.avatar.path
 
             const { dispatch } = this.props
             if (dispatch) {
@@ -68,7 +69,7 @@ class AvatarView extends Component<avatarViewProps, avatarViewStates> {
                     }
                 }).then(() => {
                     this.setState({
-                        imageUrl:`/api/${info.file.response.data.avatar.path}`,
+                        imageUrl: imageUrl,
                         loading: false,
                     })
                 })
@@ -78,16 +79,15 @@ class AvatarView extends Component<avatarViewProps, avatarViewStates> {
     };
 
     render() {
-        const { avatar } = this.props
-        const imageUrl = this.state.imageUrl || avatar
+        const { avatar, loading } = this.props
         return (
             <Fragment>
                 <div className={styles.avatar_title}>
                     <FormattedMessage id="userandsettings.basic.avatar" defaultMessage="Avatar" />
                 </div>
                 <div className={styles.avatar}>
-                    {this.state.loading && <Icon className={styles.avatarLoading} type="loading" />}
-                    <img src={imageUrl} alt="avatar" />
+                    {loading && <Icon className={styles.avatarLoading} type="loading" />}
+                    <img src={avatar} alt="avatar" />
                 </div>
                 <Upload
                     name="avatar"

@@ -105,10 +105,6 @@ const UserModel: UserModelType = {
     changeCurrentUser(state = {
       currentUser: {},
     }, action) {
-      console.log({
-        ...state.currentUser,
-        ...action.payload
-      })
       return {
         ...state,
         currentUser: {
