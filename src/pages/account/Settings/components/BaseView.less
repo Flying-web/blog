@@ -19,12 +19,24 @@
       line-height: 22px;
     }
     .avatar {
+      position: relative;
       width: 144px;
       height: 144px;
       margin-bottom: 12px;
+      border-radius: 50%;
       overflow: hidden;
       img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .avatarLoading {
+        position: absolute;
+        z-index: 10;
+        left: 50%;
+        top: 500%;
+        transform: translate(-50%,-50%);
+
       }
     }
     .button_view {

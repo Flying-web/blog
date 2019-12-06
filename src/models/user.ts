@@ -2,7 +2,7 @@ import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { message } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { queryCurrent, query as queryUsers, changeUserInfo, getAllUsers } from '@/services/user';
+import { queryCurrent, query as queryUsers, changeUserInfo, getAllUsers, changeUserAvatar } from '@/services/user';
 
 export interface CurrentUser {
   avatar?: string;
@@ -30,6 +30,7 @@ export interface UserModelType {
     fetch: Effect;
     fetchCurrent: Effect;
     fetchChangeCurrent: Effect;
+    fetchChangeCurrentAvatar: Effect;
     fetchgetAllUsers: Effect;
   };
   reducers: {
@@ -65,6 +66,14 @@ const UserModel: UserModelType = {
     },
     *fetchChangeCurrent({ payload }, { call, put }) {
       const response = yield call(changeUserInfo, payload);
+      yield put({
+        type: 'changeCurrentUser',
+        payload: response.data,
+      });
+      message.success(formatMessage({ id: 'userandsettings.basic.update.success' }))
+    },
+    *fetchChangeCurrentAvatar({ payload }, { call, put }) {
+      const response = yield call(changeUserAvatar, payload);
       yield put({
         type: 'changeCurrentUser',
         payload: response.data,

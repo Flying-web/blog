@@ -10,14 +10,21 @@ export async function queryCurrent(): Promise<any> {
 
 export async function queryNotices(): Promise<any> {
   return request('/api/notices');
-  
+
 }
 export async function getAllUsers(): Promise<any> {
   return request('/api/user/list');
 }
 
-export async function changeUserInfo(params: any): Promise<any>  {
+export async function changeUserInfo(params: any): Promise<any> {
   return request('/api/user/update', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function changeUserAvatar(params: { avatar: string }): Promise<any> {
+  return request('/api/user/updateAvatar', {
     method: 'POST',
     data: params,
   });

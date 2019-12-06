@@ -7,29 +7,13 @@ import { connect } from 'dva';
 import { CurrentUser } from '../data.d';
 import GeographicView from './GeographicView';
 import PhoneView from './PhoneView';
+import AvatarView from './AvatarView';
 import styles from './BaseView.less';
 import { ConnectState, ConnectProps } from '@/models/connect';
+import { string } from 'prop-types';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-// 头像组件 方便以后独立，增加裁剪之类的功能
-const AvatarView = ({ avatar }: { avatar: string }) => (
-  <Fragment>
-    <div className={styles.avatar_title}>
-      <FormattedMessage id="userandsettings.basic.avatar" defaultMessage="Avatar" />
-    </div>
-    <div className={styles.avatar}>
-      <img src={avatar} alt="avatar" />
-    </div>
-    <Upload fileList={[]}>
-      <div className={styles.button_view}>
-        <Button icon="upload">
-          <FormattedMessage id="userandsettings.basic.change-avatar" defaultMessage="Change avatar" />
-        </Button>
-      </div>
-    </Upload>
-  </Fragment>
-);
 interface SelectItem {
   label: string;
   key: string;
@@ -69,16 +53,18 @@ interface BaseViewProps extends FormComponentProps {
   currentUser?: CurrentUser;
 }
 
+
 @connect(({ user, loading }: ConnectState) => ({
   currentUser: user.currentUser,
   loading: loading.models.user,
 }))
 class BaseView extends Component<BaseViewProps> {
   view: HTMLDivElement | undefined = undefined;
-
+  avatar: string = '';
   componentDidMount() {
     this.setBaseInfo();
   }
+
 
   setBaseInfo = () => {
     const { currentUser, form } = this.props;
@@ -90,6 +76,14 @@ class BaseView extends Component<BaseViewProps> {
       });
     }
   };
+  onChangeAvatar = (files:any) => {
+    const { form } = this.props;
+    const avatar = files.response.data.avatar.path
+    console.log(files.response.data.avatar)
+    if(avatar) {
+     this.avatar = avatar
+    }
+  }
 
   getAvatarURL() {
     const { currentUser } = this.props;
@@ -223,7 +217,7 @@ class BaseView extends Component<BaseViewProps> {
           </Form>
         </div>
         <div className={styles.right}>
-          <AvatarView avatar={this.getAvatarURL()} />
+          <AvatarView avatar={this.getAvatarURL()} onChange={this.onChangeAvatar}/>
         </div>
       </div>
     );

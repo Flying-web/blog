@@ -135,6 +135,12 @@ export default {
               authority: ['admin'],
             },
             {
+              name: 'list',
+              icon: 'smile',
+              path: '/listcardlist',
+              component: './ListCardList',
+            },
+            {
               name: 'account',
               icon: 'user',
               path: '/account',
@@ -152,12 +158,6 @@ export default {
                   component: './account/Settings',
                 },
               ],
-            },
-            {
-              name: '搜索列表（项目）',
-              icon: 'smile',
-              path: '/listsearchprojects',
-              component: './ListSearchProjects',
             },
             {
               component: './404',
