@@ -58,7 +58,7 @@ class AvatarView extends Component<avatarViewProps, avatarViewStates> {
             //     const avatar = info.file.response.data.avatar.path
             //    }
             // );
-            const imageUrl = info.file.response.data.avatar.path
+            const imageUrl = info.file.response.data.path
 
             const { dispatch } = this.props
             if (dispatch) {
@@ -90,7 +90,7 @@ class AvatarView extends Component<avatarViewProps, avatarViewStates> {
                     <img src={avatar} alt="avatar" />
                 </div>
                 <Upload
-                    name="avatar"
+                    name="file"
                     showUploadList={false}
                     // 是否每次更改图片都要上传到后台
                     action="/api/upload"

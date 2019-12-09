@@ -32,6 +32,17 @@
   }
 }
 
+.catsForm {
+  :global {
+    .ant-form-item {
+      padding-bottom: 0;
+    }
+    .ant-card-meta-detail > div:not(:last-child) {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .extraImg {
   width: 155px;
   margin-top: -20px;
@@ -48,6 +59,36 @@
   background-color: @component-background;
   border-color: @border-color-base;
   border-radius: @border-radius-sm;
+}
+.catsUpload {
+  display: block;
+  :global {
+    .ant-upload {
+      display: block !important;
+    }
+
+  }
+ 
+}
+
+.uploadButton {
+  height: 300px;
+  overflow: hidden;
+  color: @text-color-secondary;
+  background-color: @component-background;
+  border-color: @border-color-base;
+  border-radius: @border-radius-sm;
+  img {
+    height: 300px;
+    object-fit: contain;
+  }
+  .catsUploadBtn {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #d9d9d9;
+  }
 }
 
 .cardAvatar {

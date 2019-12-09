@@ -1,4 +1,4 @@
-import { Button, Card, Icon, List, Typography } from 'antd';
+import { Button, Card, Icon, List, Typography, Modal, Input } from 'antd';
 import React, { Component } from 'react';
 
 import { Dispatch } from 'redux';
@@ -8,6 +8,8 @@ import { StateType } from './model';
 import { CardListItemDataType } from './data.d';
 import styles from './style.less';
 import jingang from '@/assets/jingang.jpg'
+import { spawn } from 'child_process';
+import CreateForm from './createForm'
 const { Paragraph } = Typography;
 
 interface ListCardListProps {
@@ -17,7 +19,7 @@ interface ListCardListProps {
 }
 interface ListCardListState {
   visible: boolean;
-  done: boolean;
+  done?: boolean;
   current?: Partial<CardListItemDataType>;
 }
 
@@ -36,9 +38,13 @@ interface ListCardListState {
   }),
 )
 class ListCardList extends Component<
-  ListCardListProps,
-  ListCardListState
+ListCardListProps,
+ListCardListState
 > {
+  formRef: any = {}
+  state: ListCardListState = {
+    visible: false,
+  };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -48,6 +54,23 @@ class ListCardList extends Component<
       },
     });
   }
+  showModal = () => {
+    this.setState({ visible: true });
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+
+  handleCreate = (values:any, rest:()=>{}) => {
+    console.log('Received values of form: ', values);
+    rest()
+    this.setState({ visible: false });
+  };
+
+  saveFormRef = (formRef: any) => {
+    this.formRef = formRef;
+  };
 
   render() {
     const {
@@ -86,6 +109,7 @@ class ListCardList extends Component<
       </div>
     );
     const nullData: Partial<CardListItemDataType> = {};
+    // const { visible, confirmLoading, ModalText } = this.state;
     return (
       <PageHeaderWrapper content={content} extraContent={extraContent}>
         <div className={styles.cardList}>
@@ -102,7 +126,7 @@ class ListCardList extends Component<
                       hoverable
                       className={styles.card}
                       cover={<img alt="example" className={styles.cardCover} src={jingang} />}
-                      // actions={[<a key="option1">操作一</a>, <a key="option2">操作二</a>]}
+                    // actions={[<a key="option1">操作一</a>, <a key="option2">操作二</a>]}
                     >
                       <Card.Meta
                         avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
@@ -119,13 +143,19 @@ class ListCardList extends Component<
               }
               return (
                 <List.Item>
-                  <Button type="dashed" className={styles.newButton}>
+                  <Button type="dashed" className={styles.newButton} onClick={this.showModal}>
                     <Icon type="plus" /> 新增图片
                   </Button>
                 </List.Item>
               );
             }}
           />
+          <CreateForm
+            wrappedComponentRef={this.saveFormRef}
+            visible={this.state.visible}
+            onCancel={this.handleCancel}
+            onCreate={this.handleCreate}
+          />>
         </div>
       </PageHeaderWrapper>
     );
