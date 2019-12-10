@@ -57,7 +57,7 @@ class Admin extends Component<AdminProps> {
     return (
       <PageHeaderWrapper>
         <Card>
-          <Table loading={listloading} columns={columns} dataSource={usersList} />
+          <Table rowKey={'userid'} loading={listloading} columns={columns} dataSource={usersList} />
         </Card>
       </PageHeaderWrapper>
     )

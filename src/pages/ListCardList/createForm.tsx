@@ -32,7 +32,8 @@ function beforeUpload(file: File) {
 
 const catsOption = [
   '英短蓝猫',
-  '美短蓝白',
+  '英短蓝白',
+  '美短',
   '折耳猫',
   '布偶猫',
   '暹罗猫',
@@ -56,8 +57,6 @@ class CreateForm extends Component<BaseViewProps> {
       if (err) {
         return;
       }
-      console.log('Received values of form: ', values);
-      
       // this.setState({ visible: false });
       onCreate(values, ()=>{
         this.setState({ imageUrl: '' });
@@ -113,7 +112,7 @@ class CreateForm extends Component<BaseViewProps> {
       </div>
     );
 
-    const catsOptions = catsOption.map(item => (<Option value={item}>{item}</Option>))
+    const catsOptions = catsOption.map(item => (<Option key={item} value={item}>{item}</Option>))
     return (
       <Modal
         visible={visible}
@@ -164,7 +163,7 @@ class CreateForm extends Component<BaseViewProps> {
                     </Col>
                     <Col sm={12} xs={24} style={{ textAlign: 'left' }}>
                       <Form.Item>
-                        {getFieldDecorator('types', {
+                        {getFieldDecorator('type', {
                           rules: [{ required: true, message: '请填写标题!' }],
                         })(<Select
                           showSearch
@@ -189,7 +188,7 @@ class CreateForm extends Component<BaseViewProps> {
               }
               description={
                 <Form.Item>
-                  {getFieldDecorator('description', {
+                  {getFieldDecorator('content', {
                     rules: [{ required: true, message: '请填写描述信息!' }],
                   })(<TextArea rows={2} placeholder='描述: 例 - 爱吃爱睡' />)}
                 </Form.Item>

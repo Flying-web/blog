@@ -2,7 +2,7 @@ import { AnyAction, Reducer } from 'redux';
 
 import { EffectsCommandMap } from 'dva';
 import { CardListItemDataType } from './data.d';
-import { queryFakeList } from './service';
+import { queryCatsList, addCat } from './service';
 
 export interface StateType {
   list: CardListItemDataType[];
@@ -18,6 +18,7 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
+    fetchAddCat: Effect;
   };
   reducers: {
     queryList: Reducer<StateType>;
@@ -25,7 +26,7 @@ export interface ModelType {
 }
 
 const Model: ModelType = {
-  namespace: 'listCardList',
+  namespace: 'catsList',
 
   state: {
     list: [],
@@ -33,11 +34,15 @@ const Model: ModelType = {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(queryFakeList, payload);
+      const { data } = yield call(queryCatsList, payload);
       yield put({
         type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
+        payload: Array.isArray(data) ? data : [],
       });
+    },
+    *fetchAddCat({ payload }, { call, put }) {
+      console.log(payload)
+      yield call(addCat, payload);
     },
   },
 
@@ -47,7 +52,7 @@ const Model: ModelType = {
         ...state,
         list: action.payload,
       };
-    },
+    }
   },
 };
 

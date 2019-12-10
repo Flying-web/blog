@@ -1,4 +1,4 @@
-import { Button, Card, Icon, List, Typography, Modal, Input } from 'antd';
+import { Button, Card, Icon, List, Typography, Modal, Input, message } from 'antd';
 import React, { Component } from 'react';
 
 import { Dispatch } from 'redux';
@@ -10,14 +10,15 @@ import styles from './style.less';
 import jingang from '@/assets/jingang.jpg'
 import { spawn } from 'child_process';
 import CreateForm from './createForm'
+import { catStates } from './service'
 const { Paragraph } = Typography;
 
-interface ListCardListProps {
-  listCardList: StateType;
+interface catsListProps {
+  catsList: StateType;
   dispatch: Dispatch<any>;
   loading: boolean;
 }
-interface ListCardListState {
+interface catsListState {
   visible: boolean;
   done?: boolean;
   current?: Partial<CardListItemDataType>;
@@ -25,30 +26,30 @@ interface ListCardListState {
 
 @connect(
   ({
-    listCardList,
+    catsList,
     loading,
   }: {
-    listCardList: StateType;
+    catsList: StateType;
     loading: {
       models: { [key: string]: boolean };
     };
   }) => ({
-    listCardList,
-    loading: loading.models.listCardList,
+    catsList,
+    loading: loading.models.catsList,
   }),
 )
-class ListCardList extends Component<
-ListCardListProps,
-ListCardListState
+class CatsList extends Component<
+catsListProps,
+catsListState
 > {
   formRef: any = {}
-  state: ListCardListState = {
+  state: catsListState = {
     visible: false,
   };
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'listCardList/fetch',
+      type: 'catsList/fetch',
       payload: {
         count: 8,
       },
@@ -62,10 +63,26 @@ ListCardListState
     this.setState({ visible: false });
   };
 
-  handleCreate = (values:any, rest:()=>{}) => {
+  handleCreate = async (values: any, rest: () => {}) => {
     console.log('Received values of form: ', values);
+    const catItem: catStates = { ...values, poster: values.poster[0].response.data.path }
+    const { dispatch } = this.props;
+    const res = await dispatch({
+      type: 'catsList/fetchAddCat',
+      payload: catItem,
+    });
+    console.log(res)
+    message.success('提交成功');
     rest()
     this.setState({ visible: false });
+    
+    dispatch({
+      type: 'catsList/fetch',
+      payload: {
+        count: 8,
+      },
+    });
+
   };
 
   saveFormRef = (formRef: any) => {
@@ -74,9 +91,10 @@ ListCardListState
 
   render() {
     const {
-      listCardList: { list },
+      catsList: { list },
       loading,
     } = this.props;
+    console.log(list)
 
     const content = (
       <div className={styles.pageHeaderContent}>
@@ -125,7 +143,7 @@ ListCardListState
                     <Card
                       hoverable
                       className={styles.card}
-                      cover={<img alt="example" className={styles.cardCover} src={jingang} />}
+                      cover={<img alt="example" className={styles.cardCover} src={item.poster} />}
                     // actions={[<a key="option1">操作一</a>, <a key="option2">操作二</a>]}
                     >
                       <Card.Meta
@@ -133,7 +151,7 @@ ListCardListState
                         title={<a>{item.title}</a>}
                         description={
                           <Paragraph className={styles.item} ellipsis={{ rows: 1 }}>
-                            {item.description}
+                            {item.content}
                           </Paragraph>
                         }
                       />
@@ -142,7 +160,7 @@ ListCardListState
                 );
               }
               return (
-                <List.Item>
+                <List.Item key={'addcat'}>
                   <Button type="dashed" className={styles.newButton} onClick={this.showModal}>
                     <Icon type="plus" /> 新增图片
                   </Button>
@@ -162,4 +180,4 @@ ListCardListState
   }
 }
 
-export default ListCardList;
+export default CatsList;

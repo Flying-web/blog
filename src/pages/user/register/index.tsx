@@ -81,7 +81,7 @@ UserRegisterState
     if (register.status === 'ok' && account !== '') {
       message.success('注册成功！');
       router.push({
-        pathname: '/user/register-result',
+        pathname: '/',
         state: {
           account,
         },
