@@ -1,5 +1,5 @@
 # Ant Design Pro
-
+此版本将保持国际化，因个人服务器带宽限制，本着能省则省的原则先暂定去除国际化看看
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
 ## Environment Prepare
