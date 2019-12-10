@@ -79,7 +79,6 @@ class BaseView extends Component<BaseViewProps> {
   onChangeAvatar = (files:any) => {
     const { form } = this.props;
     const avatar = files.response.data.avatar.path
-    console.log(files.response.data.avatar)
     if(avatar) {
      this.avatar = avatar
     }
@@ -106,7 +105,6 @@ class BaseView extends Component<BaseViewProps> {
     const { form } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        console.log('submit')
         const { dispatch } = this.props;
         if (dispatch) {
           dispatch({
@@ -149,7 +147,7 @@ class BaseView extends Component<BaseViewProps> {
               })(<Input />)}
             </FormItem>
             <FormItem label={formatMessage({ id: 'userandsettings.basic.profile' })}>
-              {getFieldDecorator('profile', {
+              {getFieldDecorator('group', {
                 rules: [
                   {
                     required: true,

@@ -41,7 +41,6 @@ const Model: ModelType = {
       });
     },
     *fetchAddCat({ payload }, { call, put }) {
-      console.log(payload)
       yield call(addCat, payload);
     },
   },

@@ -71,7 +71,6 @@ catsListState
       type: 'catsList/fetchAddCat',
       payload: catItem,
     });
-    console.log(res)
     message.success('提交成功');
     rest()
     this.setState({ visible: false });
@@ -94,7 +93,6 @@ catsListState
       catsList: { list },
       loading,
     } = this.props;
-    console.log(list)
 
     const content = (
       <div className={styles.pageHeaderContent}>

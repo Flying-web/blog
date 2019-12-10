@@ -63,8 +63,8 @@ interface CenterState {
   }),
 )
 class Center extends PureComponent<
-  CenterProps,
-  CenterState
+CenterProps,
+CenterState
 > {
   // static getDerivedStateFromProps(
   //   props: accountAndCenterProps,
@@ -127,15 +127,23 @@ class Center extends PureComponent<
   handleInputConfirm = () => {
     const { state } = this;
     const { inputValue } = state;
-    let { newTags } = state;
-    if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
-      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
+    let newTags:any = [];
+    const { dispatch, currentUser } = this.props;
+    const currentUserTags = Array.isArray(currentUser.tags) ? currentUser.tags : []
+    const startcount = currentUserTags.length
+    if (inputValue && currentUserTags.filter(tag => tag.label === inputValue).length === 0) {
+      newTags = [...newTags, { key: `new-${startcount + newTags.length}`, label: inputValue }];
     }
     this.setState({
-      newTags,
       inputVisible: false,
       inputValue: '',
     });
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchUpdateCurrentTags',
+        payload: currentUserTags.concat(newTags)
+      });
+    }
   };
 
   renderChildrenByTabKey = (tabKey: CenterState['tabKey']) => {
@@ -154,7 +162,8 @@ class Center extends PureComponent<
   render() {
     const { newTags, inputVisible, inputValue, tabKey } = this.state;
     const { currentUser, currentUserLoading } = this.props;
-    const dataLoading = currentUserLoading || !(currentUser && Object.keys(currentUser).length);
+    const dataLoading = !(currentUser && Object.keys(currentUser).length);
+    const currentUserTags = Array.isArray(currentUser.tags) ? currentUser.tags : []
     return (
       <GridContent>
         <Row gutter={24}>
@@ -168,24 +177,28 @@ class Center extends PureComponent<
                     <div>{currentUser.signature}</div>
                   </div>
                   <div className={styles.detail}>
-                    <p>
+                    {/* <p>
                       <i className={styles.title} />
-                      {currentUser.title}
-                    </p>
-                    <p>
-                      <i className={styles.group} />
-                      {currentUser.group}
-                    </p>
-                    <p>
-                      <i className={styles.address} />
-                      {/* {currentUser.geographic.province.label} */}
-                      {/* {currentUser.geographic.city.label} */}
-                    </p>
+                      {'currentUser.title'}
+                    </p> */}
+                    {currentUser.group && (
+                      <p>
+                        <i className={styles.group} />
+                        {currentUser.group}
+                      </p>
+                    )}
+                    {currentUser.geographic && (
+                       <p>
+                       <i className={styles.address} />
+                       {currentUser.geographic.province.label}
+                       {currentUser.geographic.city.label}
+                     </p>
+                    )}
                   </div>
                   <Divider dashed />
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
-                    {currentUser.tags && currentUser.tags.concat(newTags).map(item => (
+                    {currentUserTags.map(item => (
                       <Tag key={item.key}>{item.label}</Tag>
                     ))}
                     {inputVisible && (
@@ -210,7 +223,7 @@ class Center extends PureComponent<
                     )}
                   </div>
                   <Divider style={{ marginTop: 16 }} dashed />
-                  <div className={styles.team}>
+                  {/* <div className={styles.team}>
                     <div className={styles.teamTitle}>团队</div>
                     <Row gutter={36}>
                       {currentUser.notice &&
@@ -223,7 +236,7 @@ class Center extends PureComponent<
                           </Col>
                         ))}
                     </Row>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </Card>

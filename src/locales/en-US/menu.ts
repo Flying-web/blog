@@ -20,7 +20,7 @@ export default {
   'menu.form.step-form.confirm': 'Step Form(confirm transfer information)',
   'menu.form.step-form.result': 'Step Form(finished)',
   'menu.form.advanced-form': 'Advanced Form',
-  'menu.list': 'List',
+  'menu.list': 'CatSHOW',
   'menu.list.table-list': 'Search Table',
   'menu.list.basic-list': 'Basic List',
   'menu.list.card-list': 'Card List',

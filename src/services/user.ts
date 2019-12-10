@@ -29,3 +29,12 @@ export async function changeUserAvatar(params: { avatar: string }): Promise<any>
     data: params,
   });
 }
+
+export async function updateTags(tags: string) {
+  return request('/api/user/updateTags', {
+    method:"POST",
+    data: {
+      tags: tags
+    },
+  });
+}

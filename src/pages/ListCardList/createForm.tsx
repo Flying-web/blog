@@ -73,7 +73,6 @@ class CreateForm extends Component<BaseViewProps> {
     }
     if (info.file.status === 'done') {
       const imageUrl = info.file.response.data.path
-      console.log(imageUrl)
       this.setState({
         imageUrl,
         loading: false,
@@ -88,7 +87,6 @@ class CreateForm extends Component<BaseViewProps> {
     }
     if (e.file.status === 'done') {
       const imageUrl = e.file.response.data.path
-      console.log(imageUrl)
       this.setState({
         imageUrl,
         loading: false,
