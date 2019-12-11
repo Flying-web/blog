@@ -1,37 +1,22 @@
 import { Button, Col, Form, Input, Popover, Progress, Row, Select, message } from 'antd';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import { Dispatch } from 'redux';
 import { FormComponentProps } from 'antd/es/form';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import router from 'umi/router';
-
 import { StateType } from '@/models/register';
 import styles from './style.less';
 import { ConnectState } from '@/models/connect';
+
 const FormItem = Form.Item;
 const { Option } = Select;
 const InputGroup = Input.Group;
-
 const passwordStatusMap = {
-  ok: (
-    <div className={styles.success}>
-      <FormattedMessage id="register.strength.strong" />
-    </div>
-  ),
-  pass: (
-    <div className={styles.warning}>
-      <FormattedMessage id="register.strength.medium" />
-    </div>
-  ),
-  poor: (
-    <div className={styles.error}>
-      <FormattedMessage id="register.strength.short" />
-    </div>
-  ),
+  ok: <div className={styles.success}>强度：强</div>,
+  pass: <div className={styles.warning}>强度：中</div>,
+  poor: <div className={styles.error}>强度：太短</div>,
 };
-
 const passwordProgressMap: {
   ok: 'success';
   pass: 'normal';
@@ -41,7 +26,6 @@ const passwordProgressMap: {
   pass: 'normal',
   poor: 'exception',
 };
-
 interface UserRegisterProps extends FormComponentProps {
   dispatch: Dispatch<any>;
   register: StateType;
@@ -55,16 +39,11 @@ interface UserRegisterState {
   prefix: string;
 }
 
-@connect(
-  ({ register, loading, }: ConnectState) => ({
-    register,
-    submitting: loading.effects['register/submit'],
-  }),
-)
-class UserRegister extends Component<
-UserRegisterProps,
-UserRegisterState
-> {
+@connect(({ register, loading }: ConnectState) => ({
+  register,
+  submitting: loading.effects['register/submit'],
+}))
+class UserRegister extends Component<UserRegisterProps, UserRegisterState> {
   state: UserRegisterState = {
     count: 0,
     confirmDirty: false,
@@ -78,6 +57,7 @@ UserRegisterState
   componentDidUpdate() {
     const { register, form } = this.props;
     const account = form.getFieldValue('userName');
+
     if (register.status === 'ok' && account !== '') {
       message.success('注册成功！');
       router.push({
@@ -95,10 +75,15 @@ UserRegisterState
 
   onGetCaptcha = () => {
     let count = 59;
-    this.setState({ count });
+    this.setState({
+      count,
+    });
     this.interval = window.setInterval(() => {
       count -= 1;
-      this.setState({ count });
+      this.setState({
+        count,
+      });
+
       if (count === 0) {
         clearInterval(this.interval);
       }
@@ -108,34 +93,41 @@ UserRegisterState
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
+
     if (value && value.length > 5) {
       return 'ok';
     }
+
     if (value && value.length > 3) {
       return 'pass';
     }
+
     return 'poor';
   };
 
   handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const { form, dispatch } = this.props;
-    form.validateFields({ force: true }, (err, values) => {
-      if (!err) {
-        dispatch({
-          type: 'register/submit',
-          payload: {
-            ...values,
-          },
-        });
-      }
-    });
+    form.validateFields(
+      {
+        force: true,
+      },
+      (err, values) => {
+        if (!err) {
+          dispatch({
+            type: 'register/submit',
+            payload: { ...values },
+          });
+        }
+      },
+    );
   };
 
   checkConfirm = (rule: any, value: string, callback: (messgae?: string) => void) => {
     const { form } = this.props;
+
     if (value && value !== form.getFieldValue('password')) {
-      callback(formatMessage({ id: 'register.password.twice' }));
+      callback('两次输入的密码不匹配!');
     } else {
       callback();
     }
@@ -143,9 +135,10 @@ UserRegisterState
 
   checkPassword = (rule: any, value: string, callback: (messgae?: string) => void) => {
     const { visible, confirmDirty } = this.state;
+
     if (!value) {
       this.setState({
-        help: formatMessage({ id: 'register.password.required' }),
+        help: '请输入密码！',
         visible: !!value,
       });
       callback('error');
@@ -153,18 +146,24 @@ UserRegisterState
       this.setState({
         help: '',
       });
+
       if (!visible) {
         this.setState({
           visible: !!value,
         });
       }
+
       if (value.length < 6) {
         callback('error');
       } else {
         const { form } = this.props;
+
         if (value && confirmDirty) {
-          form.validateFields(['confirm'], { force: true });
+          form.validateFields(['confirm'], {
+            force: true,
+          });
         }
+
         callback();
       }
     }
@@ -200,7 +199,7 @@ UserRegisterState
     return (
       <div className={styles.main}>
         {/* <h3>
-          <FormattedMessage id="register.register.register" />
+         <FormattedMessage id="register.register.register" />
         </h3> */}
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
@@ -208,34 +207,29 @@ UserRegisterState
               rules: [
                 {
                   required: true,
-                  message: formatMessage({ id: 'register.userName.required' }),
-                }
+                  message: '请输入用户名!',
+                },
               ],
-            })(
-              <Input
-                size="large"
-                placeholder={formatMessage({ id: 'register.userName.placeholder' })}
-              />,
-            )}
+            })(<Input size="large" placeholder="用户名" />)}
           </FormItem>
           {/* <FormItem>
-            {getFieldDecorator('mail', {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({ id: 'register.email.required' }),
-                },
-                {
-                  type: 'email',
-                  message: formatMessage({ id: 'register.email.wrong-format' }),
-                },
-              ],
-            })(
-              <Input
-                size="large"
-                placeholder={formatMessage({ id: 'register.email.placeholder' })}
-              />,
-            )}
+           {getFieldDecorator('mail', {
+             rules: [
+               {
+                 required: true,
+                 message: formatMessage({ id: 'register.email.required' }),
+               },
+               {
+                 type: 'email',
+                 message: formatMessage({ id: 'register.email.wrong-format' }),
+               },
+             ],
+           })(
+             <Input
+               size="large"
+               placeholder={formatMessage({ id: 'register.email.placeholder' })}
+             />,
+           )}
           </FormItem> */}
           <FormItem help={help}>
             <Popover
@@ -243,18 +237,29 @@ UserRegisterState
                 if (node && node.parentNode) {
                   return node.parentNode as HTMLElement;
                 }
+
                 return node;
               }}
               content={
-                <div style={{ padding: '4px 0' }}>
+                <div
+                  style={{
+                    padding: '4px 0',
+                  }}
+                >
                   {passwordStatusMap[this.getPasswordStatus()]}
                   {this.renderPasswordProgress()}
-                  <div style={{ marginTop: 10 }}>
-                    <FormattedMessage id="register.strength.msg" />
+                  <div
+                    style={{
+                      marginTop: 10,
+                    }}
+                  >
+                    请至少输入 6 个字符。请不要使用容易被猜到的密码。
                   </div>
                 </div>
               }
-              overlayStyle={{ width: 240 }}
+              overlayStyle={{
+                width: 240,
+              }}
               placement="right"
               visible={visible}
             >
@@ -264,13 +269,7 @@ UserRegisterState
                     validator: this.checkPassword,
                   },
                 ],
-              })(
-                <Input
-                  size="large"
-                  type="password"
-                  placeholder={formatMessage({ id: 'register.password.placeholder' })}
-                />,
-              )}
+              })(<Input size="large" type="password" placeholder="至少6位密码，区分大小写" />)}
             </Popover>
           </FormItem>
           <FormItem>
@@ -278,81 +277,75 @@ UserRegisterState
               rules: [
                 {
                   required: true,
-                  message: formatMessage({ id: 'register.confirm-password.required' }),
+                  message: '请确认密码！',
                 },
                 {
                   validator: this.checkConfirm,
                 },
               ],
-            })(
-              <Input
-                size="large"
-                type="password"
-                placeholder={formatMessage({ id: 'register.confirm-password.placeholder' })}
-              />,
-            )}
+            })(<Input size="large" type="password" placeholder="确认密码" />)}
           </FormItem>
           {/* <FormItem>
-            <InputGroup compact>
-              <Select
-                size="large"
-                value={prefix}
-                onChange={this.changePrefix}
-                style={{ width: '20%' }}
-              >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-              </Select>
-              {getFieldDecorator('mobile', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'register.phone-number.required' }),
-                  },
-                  {
-                    pattern: /^\d{11}$/,
-                    message: formatMessage({ id: 'register.phone-number.wrong-format' }),
-                  },
-                ],
-              })(
-                <Input
-                  size="large"
-                  style={{ width: '80%' }}
-                  placeholder={formatMessage({ id: 'register.phone-number.placeholder' })}
-                />,
-              )}
-            </InputGroup>
+           <InputGroup compact>
+             <Select
+               size="large"
+               value={prefix}
+               onChange={this.changePrefix}
+               style={{ width: '20%' }}
+             >
+               <Option value="86">+86</Option>
+               <Option value="87">+87</Option>
+             </Select>
+             {getFieldDecorator('mobile', {
+               rules: [
+                 {
+                   required: true,
+                   message: formatMessage({ id: 'register.phone-number.required' }),
+                 },
+                 {
+                   pattern: /^\d{11}$/,
+                   message: formatMessage({ id: 'register.phone-number.wrong-format' }),
+                 },
+               ],
+             })(
+               <Input
+                 size="large"
+                 style={{ width: '80%' }}
+                 placeholder={formatMessage({ id: 'register.phone-number.placeholder' })}
+               />,
+             )}
+           </InputGroup>
           </FormItem> */}
           {/* <FormItem>
-            <Row gutter={8}>
-              <Col span={16}>
-                {getFieldDecorator('captcha', {
-                  rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'register.verification-code.required' }),
-                    },
-                  ],
-                })(
-                  <Input
-                    size="large"
-                    placeholder={formatMessage({ id: 'register.verification-code.placeholder' })}
-                  />,
-                )}
-              </Col>
-              <Col span={8}>
-                <Button
-                  size="large"
-                  disabled={!!count}
-                  className={styles.getCaptcha}
-                  onClick={this.onGetCaptcha}
-                >
-                  {count
-                    ? `${count} s`
-                    : formatMessage({ id: 'register.register.get-verification-code' })}
-                </Button>
-              </Col>
-            </Row>
+           <Row gutter={8}>
+             <Col span={16}>
+               {getFieldDecorator('captcha', {
+                 rules: [
+                   {
+                     required: true,
+                     message: formatMessage({ id: 'register.verification-code.required' }),
+                   },
+                 ],
+               })(
+                 <Input
+                   size="large"
+                   placeholder={formatMessage({ id: 'register.verification-code.placeholder' })}
+                 />,
+               )}
+             </Col>
+             <Col span={8}>
+               <Button
+                 size="large"
+                 disabled={!!count}
+                 className={styles.getCaptcha}
+                 onClick={this.onGetCaptcha}
+               >
+                 {count
+                   ? `${count} s`
+                   : formatMessage({ id: 'register.register.get-verification-code' })}
+               </Button>
+             </Col>
+           </Row>
           </FormItem> */}
           <FormItem>
             <Button
@@ -362,10 +355,10 @@ UserRegisterState
               type="primary"
               htmlType="submit"
             >
-              <FormattedMessage id="register.register.register" />
+              注册
             </Button>
             <Link className={styles.login} to="/user/login">
-              <FormattedMessage id="register.register.sign-in" />
+              使用已有账户登录
             </Link>
           </FormItem>
         </Form>

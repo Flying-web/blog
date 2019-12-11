@@ -17,4 +17,5 @@ export interface CardListItemDataType {
   moment: string;
   comments: string;
   pv: number;
+  avatar: string;
 }

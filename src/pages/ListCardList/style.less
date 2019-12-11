@@ -1,6 +1,17 @@
 @import '~antd/es/style/themes/default.less';
 @import './utils/utils.less';
 
+
+.catsStyle {
+  :global {
+    .ant-pro-page-header-wrap-page-header-warp {
+      background-image: url('../../assets/catbgimage.png');
+      background-size: 90px;
+      background-repeat: repeat;
+      background-origin: content-box;
+    }
+  }
+}
 .cardList {
   margin-bottom: -24px;
 
@@ -44,9 +55,10 @@
 }
 
 .extraImg {
-  width: 155px;
+  width: 100px;
   margin-top: -20px;
   text-align: center;
+  margin-left: 88px;
   img {
     width: 100%;
   }
@@ -80,6 +92,7 @@
   border-radius: @border-radius-sm;
   img {
     height: 300px;
+
     object-fit: contain;
   }
   .catsUploadBtn {
@@ -98,8 +111,36 @@
 }
 .cardCover {
   height: 300px;
+  width: 100%;
   object-fit: cover;
 }
+
+.catItem {
+  position: relative;
+
+  .catName {
+    position: absolute;
+    top: 44px;
+    width: 48px;
+    left: 0px;
+    font-size: 12px;
+    text-align: center;
+   
+    &>span:first-child {
+      color: #409EFF;
+      background-color: #ffffff;
+    }
+    &>span:last-child {
+      display: block;
+      color: #303133;
+      transform: scale(0.7,0.7)
+    }
+
+  }
+
+}
+
+
 
 
 .cardDescription {

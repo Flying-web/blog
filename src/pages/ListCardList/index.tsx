@@ -9,6 +9,7 @@ import { CardListItemDataType } from './data.d';
 import styles from './style.less';
 import jingang from '@/assets/jingang.jpg'
 import { spawn } from 'child_process';
+import RcViewer from '@hanyk/rc-viewer'
 import CreateForm from './createForm'
 import { catStates } from './service'
 const { Paragraph } = Typography;
@@ -23,6 +24,8 @@ interface catsListState {
   done?: boolean;
   current?: Partial<CardListItemDataType>;
 }
+
+const catsName = {}
 
 @connect(
   ({
@@ -74,7 +77,7 @@ catsListState
     message.success('提交成功');
     rest()
     this.setState({ visible: false });
-    
+
     dispatch({
       type: 'catsList/fetch',
       payload: {
@@ -88,30 +91,35 @@ catsListState
     this.formRef = formRef;
   };
 
+  options = {
+    filter(image: any) {
+      return image.alt === 'showModal' ? true : false
+    },
+  };
+
   render() {
     const {
       catsList: { list },
       loading,
     } = this.props;
 
+    list.forEach(i => {
+      catsName[i.name] = i.name
+    })
     const content = (
       <div className={styles.pageHeaderContent}>
         <p>
-          闲暇之际，看看猫主子，虽然丑但是有肉
+          有人说猫咪的颜值跟主人有关，瞧这猫咪，颜值跟主人一样高呀
         </p>
         <div className={styles.contentLink}>
-          <a>
-            <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg" />{' '}
-            金刚
-          </a>
-          <a>
-            <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg" />{' '}
-            骨折猫
-          </a>
-          <a>
-            <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg" />{' '}
-            蓝胖子
-          </a>
+          {
+            Object.keys(catsName).map((item, index) => (
+              <a key={index}>
+                <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg" />
+                {item}
+              </a>
+            ))
+          }
         </div>
       </div>
     );
@@ -119,59 +127,71 @@ catsListState
     const extraContent = (
       <div className={styles.extraImg}>
         <img
-          alt="这是一个标题"
-          src="https://gw.alipayobjects.com/zos/rmsportal/RzwpdLnhmvDJToTdfDPe.png"
+          alt="猫展"
+          src="/api/public/upload/avatar/timg.jpg"
         />
       </div>
     );
     const nullData: Partial<CardListItemDataType> = {};
     // const { visible, confirmLoading, ModalText } = this.state;
     return (
-      <PageHeaderWrapper content={content} extraContent={extraContent}>
+      <PageHeaderWrapper content={content} extraContent={extraContent} className={styles.catsStyle}>
         <div className={styles.cardList}>
-          <List<Partial<CardListItemDataType>>
-            rowKey="id"
-            loading={loading}
-            grid={{ gutter: 24, lg: 4, md: 3, sm: 2, xs: 1 }}
-            dataSource={[nullData, ...list]}
-            renderItem={item => {
-              if (item && item.id) {
-                return (
-                  <List.Item key={item.id}>
-                    <Card
-                      hoverable
-                      className={styles.card}
-                      cover={<img alt="example" className={styles.cardCover} src={item.poster} />}
-                    // actions={[<a key="option1">操作一</a>, <a key="option2">操作二</a>]}
-                    >
-                      <Card.Meta
-                        avatar={<img alt="" className={styles.cardAvatar} src={item.avatar} />}
-                        title={<a>{item.title}</a>}
-                        description={
-                          <Paragraph className={styles.item} ellipsis={{ rows: 1 }}>
-                            {item.content}
-                          </Paragraph>
+          <RcViewer options={this.options}>
+            <List<Partial<CardListItemDataType>>
+              rowKey="id"
+              loading={loading}
+              grid={{ gutter: 24, lg: 4, md: 3, sm: 2, xs: 1 }}
+              dataSource={[nullData, ...list]}
+              renderItem={item => {
+                if (item && item.id) {
+                  return (
+                    <List.Item key={item.id}>
+                      <Card
+                        hoverable
+                        className={styles.card}
+                        cover={
+                          <img alt="showModal" data-show={'true'} className={styles.cardCover} src={item.poster} />
                         }
-                      />
-                    </Card>
+                      // actions={[<a key="option1">操作一</a>, <a key="option2">操作二</a>]}
+                      >
+                        <Card.Meta
+                          avatar={
+                            <div className={styles.catItem}>
+                              <img alt="" className={styles.cardAvatar} src={item.avatar} />
+                              <span className={styles.catName}><span>{item.name}</span><span>{item.type}</span></span>
+                            </div>
+                          }
+                          title={
+
+                            <a>{item.title}</a>
+                          }
+                          description={
+                            <Paragraph className={styles.item} ellipsis={{ rows: 1 }}>
+                              {item.content}
+                            </Paragraph>
+                          }
+                        />
+                      </Card>
+                    </List.Item>
+                  );
+                }
+                return (
+                  <List.Item key={'addcat'}>
+                    <Button type="dashed" className={styles.newButton} onClick={this.showModal}>
+                      <Icon type="plus" /> 新增图片
+                  </Button>
                   </List.Item>
                 );
-              }
-              return (
-                <List.Item key={'addcat'}>
-                  <Button type="dashed" className={styles.newButton} onClick={this.showModal}>
-                    <Icon type="plus" /> 新增图片
-                  </Button>
-                </List.Item>
-              );
-            }}
-          />
+              }}
+            />
+          </RcViewer>
           <CreateForm
             wrappedComponentRef={this.saveFormRef}
             visible={this.state.visible}
             onCancel={this.handleCancel}
             onCreate={this.handleCreate}
-          />>
+          />
         </div>
       </PageHeaderWrapper>
     );

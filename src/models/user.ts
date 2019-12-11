@@ -1,8 +1,14 @@
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { message } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
-import { queryCurrent, query as queryUsers, changeUserInfo, getAllUsers, changeUserAvatar, updateTags } from '@/services/user';
+import {
+  queryCurrent,
+  query as queryUsers,
+  changeUserInfo,
+  getAllUsers,
+  changeUserAvatar,
+  updateTags,
+} from '@/services/user';
 
 export interface CurrentUser {
   avatar?: string;
@@ -17,12 +23,10 @@ export interface CurrentUser {
   userid?: string;
   unreadCount?: number;
 }
-
 export interface UserModelState {
   currentUser?: CurrentUser;
   allUsers?: any[];
 }
-
 export interface UserModelType {
   namespace: 'user';
   state: UserModelState;
@@ -41,15 +45,12 @@ export interface UserModelType {
     changeNotifyCount: Reducer<UserModelState>;
   };
 }
-
 const UserModel: UserModelType = {
   namespace: 'user',
-
   state: {
     currentUser: {},
-    allUsers: []
+    allUsers: [],
   },
-
   effects: {
     *fetch(_, { call, put }) {
       const response = yield call(queryUsers);
@@ -58,6 +59,7 @@ const UserModel: UserModelType = {
         payload: response,
       });
     },
+
     *fetchCurrent(_, { call, put }) {
       const { data } = yield call(queryCurrent);
       yield put({
@@ -65,65 +67,62 @@ const UserModel: UserModelType = {
         payload: data,
       });
     },
+
     *fetchChangeCurrent({ payload }, { call, put }) {
       const response = yield call(changeUserInfo, payload);
-
       yield put({
         type: 'changeCurrentUser',
         payload: response.data,
       });
+
       if (response.status === 'ok') {
-        message.success(formatMessage({ id: 'userandsettings.basic.update.success' }))
+        message.success('更新基本信息成功');
       }
     },
+
     *fetchChangeCurrentAvatar({ payload }, { call, put }) {
       const response = yield call(changeUserAvatar, payload);
       yield put({
         type: 'changeCurrentUser',
         payload: response.data,
       });
-      message.success(formatMessage({ id: 'userandsettings.basic.update.success' }))
+      message.success('更新基本信息成功');
     },
+
     *fetchUpdateCurrentTags({ payload }, { call, put }) {
-      const {data} = yield call(updateTags, JSON.stringify(payload));
+      const { data } = yield call(updateTags, JSON.stringify(payload));
       yield put({
         type: 'changeCurrentUser',
         payload: data,
       });
     },
+
     *fetchgetAllUsers({ payload }, { call, put }) {
       const response = yield call(getAllUsers, payload);
       yield put({
         type: 'getAllUsers',
-        payload:response.data,
+        payload: response.data,
       });
     },
   },
-
   reducers: {
     saveCurrentUser(state, action) {
-      return {
-        ...state,
-        currentUser: action.payload || {},
-      };
+      return { ...state, currentUser: action.payload || {} };
     },
+
     getAllUsers(state, action) {
-      return {
-        ...state,
-        allUsers: action.payload || [],
-      };
+      return { ...state, allUsers: action.payload || [] };
     },
-    changeCurrentUser(state = {
-      currentUser: {},
-    }, action) {
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          ...action.payload
-        },
-      };
+
+    changeCurrentUser(
+      state = {
+        currentUser: {},
+      },
+      action,
+    ) {
+      return { ...state, currentUser: { ...state.currentUser, ...action.payload } };
     },
+
     changeNotifyCount(
       state = {
         currentUser: {},
@@ -141,5 +140,4 @@ const UserModel: UserModelType = {
     },
   },
 };
-
 export default UserModel;

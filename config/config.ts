@@ -17,14 +17,7 @@ const plugins: IPlugin[] = [
       dva: {
         hmr: true,
       },
-      locale: {
-        // default false
-        enable: true,
-        // default zh-CN
-        default: 'zh-CN',
-        // default true, when it is true, will use `navigator.language` overwrite default
-        baseNavigator: true,
-      },
+      locale: false,
       // dynamicImport: {
       //   loadingComponent: './components/PageLoading/index',
       //   webpackChunkName: true,
@@ -52,6 +45,10 @@ const plugins: IPlugin[] = [
             '^/api': '',
           },
         },
+      },
+      dynamicImport: {
+        webpackChunkName: true,
+        level: '/',
       },
     },
   ],
@@ -123,36 +120,37 @@ export default {
             },
             {
               path: '/welcome',
-              name: 'welcome',
+              name: '欢迎',
               icon: 'smile',
               component: './Welcome',
             },
             {
               path: '/admin',
-              name: 'admin',
+              name: '管理页',
               icon: 'crown',
               component: './Admin',
               authority: ['admin'],
             },
             {
-              name: 'list',
-              icon: 'smile',
               path: '/listcardlist',
+              name: '猫展厅',
+              icon: 'smile',
               component: './ListCardList',
             },
             {
-              name: 'account',
+              name: '个人页',
               icon: 'user',
               path: '/account',
+              authority: ['admin','user'],
               routes: [
                 {
-                  name: 'center',
+                  name: '个人中心',
                   icon: 'smile',
                   path: '/account/center',
                   component: './account/Center',
                 },
                 {
-                  name: 'settings',
+                  name: '个人设置',
                   icon: 'smile',
                   path: '/account/settings',
                   component: './account/Settings',
@@ -230,4 +228,7 @@ export default {
       },
     },
   },
+  // publicPath: '/static/',
+  treeShaking: true,
 } as IConfig;
+

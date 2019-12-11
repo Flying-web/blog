@@ -3,15 +3,15 @@ import { Helmet } from 'react-helmet';
 import Link from 'umi/link';
 import React from 'react';
 import { connect } from 'dva';
-import { formatMessage } from 'umi-plugin-react/locale';
-
-import SelectLang from '@/components/SelectLang';
+// import SelectLang from '@/components/SelectLang';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import logo from '../assets/logo.png';
 import styles from './UserLayout.less';
 
 export interface UserLayoutProps extends ConnectProps {
-  breadcrumbNameMap: { [path: string]: MenuDataItem };
+  breadcrumbNameMap: {
+    [path: string]: MenuDataItem;
+  };
 }
 
 const UserLayout: React.SFC<UserLayoutProps> = props => {
@@ -31,12 +31,13 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
   const title = getPageTitle({
     pathname: location.pathname,
     breadcrumb,
-    formatMessage,
     ...props,
   });
   const defaultFooterDom = (
     <DefaultFooter
-      style={{background:'transparent'}}
+      style={{
+        background: 'transparent',
+      }}
       copyright="2019 冀ICP备19034687号"
       links={[
         {
@@ -44,10 +45,10 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
           title: '个人学习',
           href: 'http://lightclound.top',
           blankTarget: true,
-        }
+        },
       ]}
     />
-  )
+  );
   return (
     <>
       <Helmet>
@@ -57,7 +58,7 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
 
       <div className={styles.container}>
         <div className={styles.lang}>
-          <SelectLang />
+          {/* <SelectLang /> */}
         </div>
         <div className={styles.content}>
           <div className={styles.top}>
@@ -76,6 +77,4 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
   );
 };
 
-export default connect(({ settings }: ConnectState) => ({
-  ...settings,
-}))(UserLayout);
+export default connect(({ settings }: ConnectState) => ({ ...settings }))(UserLayout);

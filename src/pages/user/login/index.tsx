@@ -1,7 +1,5 @@
 import { Alert, Checkbox, Icon } from 'antd';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
-
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { Dispatch, AnyAction } from 'redux';
 import { FormComponentProps } from 'antd/es/form';
@@ -14,7 +12,6 @@ import { LoginParamsType } from '@/services/login';
 import { ConnectState } from '@/models/connect';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
-
 interface LoginProps {
   dispatch: Dispatch<AnyAction>;
   userLogin: StateType;
@@ -45,20 +42,20 @@ class Login extends Component<LoginProps, LoginState> {
 
   handleSubmit = (err: unknown, values: LoginParamsType) => {
     const { type } = this.state;
+
     if (!err) {
       const { dispatch } = this.props;
       dispatch({
         type: 'login/login',
-        payload: {
-          ...values,
-          type,
-        },
+        payload: { ...values, type },
       });
     }
   };
 
   onTabChange = (type: string) => {
-    this.setState({ type });
+    this.setState({
+      type,
+    });
   };
 
   onGetCaptcha = () =>
@@ -66,6 +63,7 @@ class Login extends Component<LoginProps, LoginState> {
       if (!this.loginForm) {
         return;
       }
+
       this.loginForm.validateFields(
         ['mobile'],
         {},
@@ -74,6 +72,7 @@ class Login extends Component<LoginProps, LoginState> {
             reject(err);
           } else {
             const { dispatch } = this.props;
+
             try {
               const success = await ((dispatch({
                 type: 'login/getCaptcha',
@@ -89,7 +88,14 @@ class Login extends Component<LoginProps, LoginState> {
     });
 
   renderMessage = (content: string) => (
-    <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
+    <Alert
+      style={{
+        marginBottom: 24,
+      }}
+      message={content}
+      type="error"
+      showIcon
+    />
   );
 
   render() {
@@ -110,30 +116,29 @@ class Login extends Component<LoginProps, LoginState> {
             {status === 'error' &&
               loginType === 'account' &&
               !submitting &&
-              this.renderMessage(
-                formatMessage({ id: 'user-login.login.message-invalid-credentials' }),
-              )}
+              this.renderMessage('账户或密码错误')}
             <UserName
               name="userName"
-              placeholder={`${formatMessage({ id: 'user-login.login.userName' })}: `}
+              placeholder={`${'用户名'}: `}
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'user-login.userName.required' }),
+                  message: '请输入用户名!',
                 },
               ]}
             />
             <Password
               name="password"
-              placeholder={`${formatMessage({ id: 'user-login.login.password' })}: `}
+              placeholder={`${'密码'}: `}
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'user-login.password.required' }),
+                  message: '请输入密码！',
                 },
               ]}
               onPressEnter={e => {
                 e.preventDefault();
+
                 if (this.loginForm) {
                   this.loginForm.validateFields(this.handleSubmit);
                 }
@@ -142,22 +147,25 @@ class Login extends Component<LoginProps, LoginState> {
           </div>
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              <FormattedMessage id="user-login.login.remember-me" />
+              自动登录
             </Checkbox>
             <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="register.register.register" />
+              注册
             </Link>
-            <a style={{ float: 'right' }} href="">
-              <FormattedMessage id="user-login.login.forgot-password" />
+            <a
+              style={{
+                float: 'right',
+              }}
+              href=""
+            >
+              忘记密码
             </a>
           </div>
-          <Submit loading={submitting}>
-            <FormattedMessage id="user-login.login.login" />
-          </Submit>
+          <Submit loading={submitting}>登录</Submit>
           {/* <div className={styles.other}>
-            <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="register.register.register" />
-            </Link>
+           <Link className={styles.register} to="/user/register">
+             <FormattedMessage id="register.register.register" />
+           </Link>
           </div> */}
         </LoginComponents>
       </div>
